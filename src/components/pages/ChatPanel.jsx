@@ -18,8 +18,8 @@ const Avatar = ({ text, isAI }) => (
 const ShimmerBubble = () => (
     <div className="flex items-start gap-3">
         <Avatar isAI />
-        <div className="max-w-xl rounded-lg rounded-tl-none border border-slate-700 bg-slate-800 text-slate-400 px-4 py-2">
-            <span className="animate-pulse">Thinking...</span>
+        <div className="max-w-xl rounded-lg rounded-tl-none border border-slate-700 bg-slate-800 font-semibold px-4 py-2">
+            <span className="shimmer">Thinking...</span>
         </div>
     </div>
 );
@@ -78,6 +78,7 @@ const ChatPanel = () => {
                 sender: "ai",
                 text: apex.content,
                 chatId: apex.chat,
+                timestamp: new Date().toISOString()
             };
             setMessagesMap((prev) => ({
                 ...prev,
@@ -106,6 +107,18 @@ const ChatPanel = () => {
         const first = currentUser.firstName || "";
         const last = currentUser.lastName || "";
         return (first.charAt(0) + last.charAt(0)).toUpperCase();
+    };
+
+    // Safely format timestamps (returns empty string when invalid)
+    const formatTime = (ts) => {
+        if (!ts) return "";
+        try {
+            const d = new Date(ts);
+            if (isNaN(d.getTime())) return "";
+            return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        } catch {
+            return "";
+        }
     };
 
     // Create new chat
@@ -138,6 +151,8 @@ const ChatPanel = () => {
                     sender: m.role === 'model' ? 'ai' : 'user',
                     text: m.content || m.text || '',
                     chatId: m.chat || chat._id,
+                    // prefer createdAt, then timestamp, then updatedAt; fallback to now
+                    timestamp: m.createdAt || m.timestamp || m.updatedAt || new Date().toISOString(),
                 }));
                 setMessagesMap((prev) => ({ ...prev, [chat._id]: mapped }));
             } catch (err) {
@@ -150,12 +165,12 @@ const ChatPanel = () => {
     // Send message
     const sendMessage = () => {
         if (!input || !activeChat) return;
-
         const userMsg = {
             _id: Date.now().toString(),
             sender: "user",
             text: input,
             chatId: activeChat,
+            timestamp: new Date().toISOString()
         };
 
         setMessagesMap((prev) => ({
@@ -243,11 +258,12 @@ const ChatPanel = () => {
                                     {msg.sender === "ai" && <Avatar isAI />}
                                     <div
                                         className={`max-w-xl p-4 ${msg.sender === "user"
-                                            ? "rounded-lg rounded-tr-none bg-green-500 font-medium text-slate-900"
+                                            ? "rounded-lg rounded-tr-none bg-lime-700 font-medium text-slate-200"
                                             : "rounded-lg rounded-tl-none border border-slate-700 bg-slate-800 text-slate-200"
                                             }`}
                                     >
                                         {msg.text}
+                                        <div className="text-xs text-slate-300 font-semibold mt-2">{formatTime(msg.timestamp)}</div>
                                     </div>
                                     {msg.sender === "user" && <Avatar text={getInitials()} />}
                                 </div>
