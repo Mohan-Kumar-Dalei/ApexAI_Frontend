@@ -74,7 +74,7 @@ const ChatPanel = () => {
     useEffect(() => {
         const socketInstance = io("https://apexai-backend.onrender.com", { withCredentials: true });
         setSocketIO(socketInstance);
-        socketIO.on("ai-response", (apex) => {
+        socketInstance.on("ai-response", (apex) => {
             const aiMessage = {
                 _id: Date.now().toString(),
                 sender: "ai",
