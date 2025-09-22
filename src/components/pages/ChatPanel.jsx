@@ -33,8 +33,8 @@ const ChatPanel = () => {
     const [authError, setAuthError] = useState(false);
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [loadingAI, setLoadingAI] = useState(false);
-    const socketInstance = io("https://apexai-backend.onrender.com", { withCredentials: true });
-    const [socketIO] = useState(socketInstance);
+
+    const [socketIO, setSocketIO] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for mobile sidebar
     const messagesEndRef = useRef(null);
 
@@ -72,7 +72,8 @@ const ChatPanel = () => {
 
     // Socket setup
     useEffect(() => {
-
+        const socketInstance = io("https://apexai-backend.onrender.com", { withCredentials: true });
+        setSocketIO(socketInstance);
         socketIO.on("ai-response", (apex) => {
             const aiMessage = {
                 _id: Date.now().toString(),

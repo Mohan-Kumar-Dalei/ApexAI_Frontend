@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    // baseURL: "https://apexai-backend.onrender.com",
-    baseURL: "http://localhost:3000",
+    baseURL: "https://apexai-backend.onrender.com",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"
