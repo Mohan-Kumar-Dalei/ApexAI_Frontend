@@ -295,6 +295,7 @@ const ChatPanel = () => {
                         </div>
                     ) : (
                         <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+                            <span className="border border-gray-700 bg-gray-800 text-slate-400 rounded-full px-3 py-1 text-sm font-semibold">Apex Agent</span>
                             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-l from-slate-400 to-white bg-clip-text text-transparent">
                                 Hello, <span className="text-yellow-300">🖐️</span>{currentUser?.firstName} {currentUser?.lastName}!
                             </h2>
